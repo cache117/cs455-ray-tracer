@@ -89,11 +89,25 @@ public class Scene
         Color colorSeen = light.getBackgroundColor();
         for (SceneObject sceneObject : objects)
         {
+            int iMin = 0;
+            int iMax = IMAGE_DIMENSION - 1;
+            double uMax = 1;
+            double uMin = -1;
+            double uNew = getNewViewportWindowPoint(x, iMin, iMax, uMin, uMax);
+
+            int jMin = 0;
+            int jMax = IMAGE_DIMENSION - 1;
+            double vMax = 1;
+            double vMin = -1;
+            double vNew = getNewViewportWindowPoint(y, jMin, jMax, vMin, vMax);
+
+            double wNew = 0;
+
             Vector n = cameraSettings.getN();
             Vector u = cameraSettings.getU();
             Vector v = cameraSettings.getV();
 
-            Vector worldSpaceOrigin = cameraSettings.getLookAt().add(u.multiply(x)).add(v.multiply(y)).add(n.multiply(0));
+            Vector worldSpaceOrigin = cameraSettings.getLookAt().add(u.multiply(uNew)).add(v.multiply(vNew)).add(n.multiply(wNew));
             Ray ray = new Ray(worldSpaceOrigin, new Vector(0, 0, 1));
             Vector intersection = sceneObject.getIntersectionVector(ray);
             if (intersection != null)
@@ -108,6 +122,11 @@ public class Scene
         return getRGBArrayOfColor(colorSeen);
     }
 
+    private double getNewViewportWindowPoint(int point, int pointMin, int pointMax, double newPointMin, double newPointMax)
+    {
+        return (point - pointMin) * ((newPointMin - newPointMax) / (pointMax - pointMin)) + newPointMax;
+    }
+
     private int[] getRGBArrayOfColor(Color color)
     {
         return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
@@ -116,6 +135,6 @@ public class Scene
     private int[] getRandomPixelsRGB()
     {
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        return new int[] {random.nextInt(0, 256), random.nextInt(0, 256), random.nextInt(0, 256)};
+        return new int[]{random.nextInt(0, 256), random.nextInt(0, 256), random.nextInt(0, 256)};
     }
 }
