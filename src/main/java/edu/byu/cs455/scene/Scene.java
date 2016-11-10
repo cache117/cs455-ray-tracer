@@ -151,25 +151,26 @@ public class Scene
 
     private Vector getViewingSpaceCoordinate(int viewportI, int viewportJ)
     {
+        double viewportSize = cameraSettings.getViewPortSize();
         int iMin = 0;
         int iMax = IMAGE_DIMENSION - 1;
-        double uMax = 1;
-        double uMin = -1;
+        double uMax = viewportSize;
+        double uMin = -viewportSize;
         double uNew = getNewViewportWindowPoint(viewportI, iMin, iMax, uMin, uMax);
 
         int jMin = 0;
         int jMax = IMAGE_DIMENSION - 1;
-        double vMax = 1;
-        double vMin = -1;
+        double vMax = viewportSize;
+        double vMin = -viewportSize;
         double vNew = getNewViewportWindowPoint(viewportJ, jMin, jMax, vMin, vMax);
 
         double wNew = 0;
         return new Vector(uNew, vNew, wNew);
     }
 
-    private double getNewViewportWindowPoint(double point, double pointMin, double pointMax, double newPointMin, double newPointMax)
+    private double getNewViewportWindowPoint(int point, int pointMin, int pointMax, double newPointMin, double newPointMax)
     {
-        return (point - pointMin) * ((newPointMin - newPointMax) / (pointMax - pointMin)) + newPointMax;
+        return (point - pointMin) * ((newPointMin - newPointMax) / (double) (pointMax - pointMin)) + newPointMax;
     }
 
     private int[] getRGBArrayOfColor(Color color)

@@ -54,4 +54,10 @@ public class CameraSettings
     {
         return v;
     }
+
+    public double getViewPortSize()
+    {
+        double distance = n.z();
+        return Math.tan(Math.toRadians(fieldOfView / 2)) * distance;
+    }
 }
