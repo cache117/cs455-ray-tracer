@@ -1,7 +1,8 @@
 package edu.byu.cs455.scene.object;
 
-import edu.byu.cs455.scene.Ray;
-import edu.byu.cs455.scene.Vector;
+import edu.byu.cs455.scene.element.Ray;
+import edu.byu.cs455.scene.element.Vector;
+import edu.byu.cs455.scene.material.Material;
 
 import java.awt.*;
 
@@ -13,16 +14,9 @@ public class Sphere extends SceneObject
     private final Vector center;
     private final double radius;
 
-    public Sphere(Vector center, double radius, Material material, Color materialColor, Color specularHighlightColor, int phongConstant)
+    public Sphere(Vector center, double radius, Material material)
     {
-        super(material, materialColor, specularHighlightColor, phongConstant);
-        this.center = center;
-        this.radius = radius;
-    }
-
-    public Sphere(Vector center, float radius, Material material, Color materialColor)
-    {
-        super(material, materialColor);
+        super(material);
         this.center = center;
         this.radius = radius;
     }
@@ -35,6 +29,12 @@ public class Sphere extends SceneObject
     public double getRadius()
     {
         return radius;
+    }
+
+    @Override
+    public Color getMaterialColor(Vector intersectionPoint)
+    {
+        return null;
     }
 
     @Override

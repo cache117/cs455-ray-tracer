@@ -1,4 +1,4 @@
-package edu.byu.cs455.scene;
+package edu.byu.cs455.scene.element;
 
 /**
  * Created by cstaheli on 11/6/2016.
