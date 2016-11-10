@@ -1,5 +1,9 @@
 package edu.byu.cs455.scene;
 
+import edu.byu.cs455.scene.element.CameraSettings;
+import edu.byu.cs455.scene.element.Light;
+import edu.byu.cs455.scene.element.Ray;
+import edu.byu.cs455.scene.element.Vector;
 import edu.byu.cs455.scene.object.SceneObject;
 import edu.byu.cs455.scene.object.Sphere;
 import edu.byu.cs455.scene.object.Triangle;
@@ -82,33 +86,26 @@ public class Scene
 
     private int[] rayTracePixel(int x, int y)
     {
-        List<SceneObject> objects = new ArrayList<>();
-        objects.addAll(spheres);
-        objects.addAll(triangles);
+        Vector viewingSpaceCoordinate = getViewingSpaceCoordinate(x, y);
+        Vector worldSpaceCoordinate = getWorldSpaceCoordinate(viewingSpaceCoordinate);
+        Ray ray = getRay(worldSpaceCoordinate);
+        return getRGBArrayOfColor(getRayColor(ray));
+    }
+
+    private Ray getRay(Vector worldSpaceCoordinate)
+    {
+        Vector eye = cameraSettings.getLookFrom();
+        Vector direction = getRayDirection(worldSpaceCoordinate, eye);
+        return new Ray(eye, direction);
+    }
+
+    private Color getRayColor(Ray ray)
+    {
+        List<SceneObject> objects = getSceneObjects();
         double closest = Integer.MAX_VALUE;
         Color colorSeen = light.getBackgroundColor();
         for (SceneObject sceneObject : objects)
         {
-            int iMin = 0;
-            int iMax = IMAGE_DIMENSION - 1;
-            double uMax = 1;
-            double uMin = -1;
-            double uNew = getNewViewportWindowPoint(x, iMin, iMax, uMin, uMax);
-
-            int jMin = 0;
-            int jMax = IMAGE_DIMENSION - 1;
-            double vMax = 1;
-            double vMin = -1;
-            double vNew = getNewViewportWindowPoint(y, jMin, jMax, vMin, vMax);
-
-            double wNew = 0;
-
-            Vector n = cameraSettings.getN();
-            Vector u = cameraSettings.getU();
-            Vector v = cameraSettings.getV();
-
-            Vector worldSpaceOrigin = cameraSettings.getLookAt().add(u.multiply(uNew)).add(v.multiply(vNew)).add(n.multiply(wNew));
-            Ray ray = new Ray(worldSpaceOrigin, new Vector(0, 0, 1));
             Vector intersection = sceneObject.getIntersectionVector(ray);
             if (intersection != null)
             {
@@ -119,10 +116,58 @@ public class Scene
                 }
             }
         }
-        return getRGBArrayOfColor(colorSeen);
+        return colorSeen;
     }
 
-    private double getNewViewportWindowPoint(int point, int pointMin, int pointMax, double newPointMin, double newPointMax)
+    private List<SceneObject> getSceneObjects()
+    {
+        List<SceneObject> objects = new ArrayList<>();
+        objects.addAll(spheres);
+        objects.addAll(triangles);
+        return objects;
+    }
+
+    private Vector getWorldSpaceCoordinate(Vector viewingSpaceCoordinate)
+    {
+        double us = viewingSpaceCoordinate.x();
+        double vs = viewingSpaceCoordinate.y();
+        double ws = viewingSpaceCoordinate.z();
+
+        Vector n = cameraSettings.getN();
+        Vector u = cameraSettings.getU();
+        Vector v = cameraSettings.getV();
+
+        //s_world = LookAt + us * u + vs * v + ws * w
+        return cameraSettings.getLookAt()
+                .add(u.multiply(us))
+                .add(v.multiply(vs))
+                .add(n.multiply(ws));
+    }
+
+    private Vector getRayDirection(Vector worldSpaceCoordinate, Vector eye)
+    {
+        return worldSpaceCoordinate.subtract(eye);
+    }
+
+    private Vector getViewingSpaceCoordinate(int viewportI, int viewportJ)
+    {
+        int iMin = 0;
+        int iMax = IMAGE_DIMENSION - 1;
+        double uMax = 1;
+        double uMin = -1;
+        double uNew = getNewViewportWindowPoint(viewportI, iMin, iMax, uMin, uMax);
+
+        int jMin = 0;
+        int jMax = IMAGE_DIMENSION - 1;
+        double vMax = 1;
+        double vMin = -1;
+        double vNew = getNewViewportWindowPoint(viewportJ, jMin, jMax, vMin, vMax);
+
+        double wNew = 0;
+        return new Vector(uNew, vNew, wNew);
+    }
+
+    private double getNewViewportWindowPoint(double point, double pointMin, double pointMax, double newPointMin, double newPointMax)
     {
         return (point - pointMin) * ((newPointMin - newPointMax) / (pointMax - pointMin)) + newPointMax;
     }
