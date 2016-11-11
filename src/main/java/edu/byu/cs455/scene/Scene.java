@@ -126,10 +126,7 @@ public class Scene
 
     private boolean isInShadow(Vector pointToCheck)
     {
-        double epsilon = 0.00001;
-        Ray ray = new Ray(pointToCheck, getLight().getDirectionToLight());
-        Vector newOrigin = ray.getLocation(epsilon);
-        ray = new Ray(newOrigin, getLight().getDirectionToLight());
+        Ray ray = getShadowRay(pointToCheck);
         for (SceneObject sceneObject : getSceneObjects())
         {
             Vector intersection = sceneObject.getIntersectionVector(ray);
@@ -139,6 +136,16 @@ public class Scene
             }
         }
         return false;
+    }
+
+    private Ray getShadowRay(Vector pointToCheck)
+    {
+        double epsilon = 0.00001;
+        Vector direction = getLight().getDirectionToLight().subtract(pointToCheck).normalize();
+        Ray ray = new Ray(pointToCheck, direction);
+        Vector newOrigin = ray.getLocation(epsilon);
+        ray = new Ray(newOrigin, direction);
+        return ray;
     }
 
     private List<SceneObject> getSceneObjects()
