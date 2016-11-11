@@ -34,7 +34,7 @@ public class Sphere extends SceneObject
     @Override
     public Color getMaterialColor(Vector intersectionPoint)
     {
-        return null;
+        return getMaterialColor();
     }
 
     @Override
@@ -52,6 +52,12 @@ public class Sphere extends SceneObject
         {
             return ray.getLocation(bestRoot);
         }
+    }
+
+    @Override
+    public Vector getNormalAtIntersection(Vector intersection)
+    {
+        return intersection.subtract(this.getCenter()).multiply(1.0 / this.getRadius());
     }
 
     private double getBFromRay(Ray ray)

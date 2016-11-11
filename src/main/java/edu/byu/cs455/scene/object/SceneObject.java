@@ -26,4 +26,6 @@ public abstract class SceneObject
     public abstract Color getMaterialColor(Vector intersectionPoint);
 
     public abstract Vector getIntersectionVector(Ray ray);
+
+    public abstract Vector getNormalAtIntersection(Vector intersection);
 }

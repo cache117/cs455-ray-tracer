@@ -42,7 +42,7 @@ public class Triangle extends SceneObject
     @Override
     public Color getMaterialColor(Vector intersectionPoint)
     {
-        return null;
+        return getMaterialColor();
     }
 
     @Override
@@ -64,6 +64,12 @@ public class Triangle extends SceneObject
         {
             return null;
         }
+    }
+
+    @Override
+    public Vector getNormalAtIntersection(Vector intersection)
+    {
+        return getPlaneNormal();
     }
 
     private boolean isIntersectionVectorInsideTriangle(Vector planeIntersectionVector)
