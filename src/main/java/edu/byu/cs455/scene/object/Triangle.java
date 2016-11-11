@@ -1,5 +1,6 @@
 package edu.byu.cs455.scene.object;
 
+import edu.byu.cs455.scene.element.Light;
 import edu.byu.cs455.scene.element.PlanePoint;
 import edu.byu.cs455.scene.element.Ray;
 import edu.byu.cs455.scene.element.Vector;
@@ -37,12 +38,6 @@ public class Triangle extends SceneObject
     public Vector getC()
     {
         return c;
-    }
-
-    @Override
-    public Color getMaterialColor(Vector intersectionPoint)
-    {
-        return getMaterialColor();
     }
 
     @Override
@@ -84,16 +79,22 @@ public class Triangle extends SceneObject
     {
         Coordinate largestCoordinate = getLargestMagnitude(getPlaneNormal());
         PlanePoint intersectionPoint = projectOnto2DPlane(largestCoordinate, planeIntersectionVector);
-        List<Vector> vectors = new ArrayList<>();
-        vectors.add(a);
-        vectors.add(b);
-        vectors.add(c);
+        List<Vector> vectors = getTriangleVertices();
         List<PlanePoint> vertices = new ArrayList<>();
         for (Vector vector : vectors)
         {
             vertices.add(projectOnto2DPlane(largestCoordinate, vector).subtract(intersectionPoint));
         }
         return vertices;
+    }
+
+    private List<Vector> getTriangleVertices()
+    {
+        List<Vector> vectors = new ArrayList<>();
+        vectors.add(a);
+        vectors.add(b);
+        vectors.add(c);
+        return vectors;
     }
 
     private int getNumCrossings(List<PlanePoint> vertices)

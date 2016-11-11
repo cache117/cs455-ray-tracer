@@ -76,6 +76,11 @@ public class Vector
         return new Vector(vector.multiply(factor));
     }
 
+    public Vector multiply(Vector other)
+    {
+        return new Vector(x() * other.x(), y() * other.y(), z() * other.z());
+    }
+
     public Vector normalize()
     {
         return new Vector(vector.normalize());

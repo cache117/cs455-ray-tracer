@@ -39,6 +39,6 @@ public class CameraSettings
     public double getViewPortSize()
     {
         double distance = lookFrom.subtract(lookAt).z();
-        return Math.tan(Math.toRadians(fieldOfView / 2)) * distance;
+        return Math.tan(Math.toRadians(fieldOfView)) * distance;
     }
 }

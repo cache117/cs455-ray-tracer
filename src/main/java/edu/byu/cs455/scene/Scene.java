@@ -90,38 +90,19 @@ public class Scene
     {
         Vector worldSpaceOrigin = getVector(x, y);
         Ray ray = getRay(worldSpaceOrigin);
-
         Color colorSeen = getRayColor(ray);
         return getRGBArrayOfColor(colorSeen);
     }
 
     private Vector getVector(int i, int j)
     {
-        //double viewportSize = cameraSettings.getViewPortSize();
-        double viewportSize = 1;
+        double viewportSize = cameraSettings.getViewPortSize();
         double iStep = (viewportSize * 2) / (double) IMAGE_WIDTH;
         double jStep = (viewportSize * 2) / (double) IMAGE_HEIGHT;
         double u = i * iStep + (iStep / 2) - viewportSize;
         double v = j * jStep + (jStep / 2) - viewportSize;
         double w = 0;
         return new Vector(u, v, w);
-
-//        double viewportSize = cameraSettings.getViewPortSize();
-//        //double viewportSize = 1;
-//        int iMin = 0;
-//        int iMax = IMAGE_DIMENSION;
-//        double uMax = viewportSize;
-//        double uMin = -viewportSize;
-//        double uNew = getNewViewportWindowPoint(i, iMin, iMax, uMin, uMax);
-//
-//        int jMin = 0;
-//        int jMax = IMAGE_DIMENSION;
-//        double vMax = viewportSize;
-//        double vMin = -viewportSize;
-//        double vNew = getNewViewportWindowPoint(j, jMin, jMax, vMin, vMax);
-//
-//        double wNew = 0;
-//        return new Vector(uNew, vNew, wNew);
     }
 
     private Color getRayColor(Ray ray)
@@ -137,7 +118,7 @@ public class Scene
                 if (intersection.z() < closest)
                 {
                     closest = intersection.z();
-                    colorSeen = sceneObject.getMaterialColor(intersection);
+                    colorSeen = sceneObject.getMaterialColor(intersection, getLight());
                 }
             }
         }

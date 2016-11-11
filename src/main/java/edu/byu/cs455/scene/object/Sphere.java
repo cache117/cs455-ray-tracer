@@ -1,5 +1,6 @@
 package edu.byu.cs455.scene.object;
 
+import edu.byu.cs455.scene.element.Light;
 import edu.byu.cs455.scene.element.Ray;
 import edu.byu.cs455.scene.element.Vector;
 import edu.byu.cs455.scene.material.Material;
@@ -29,12 +30,6 @@ public class Sphere extends SceneObject
     public double getRadius()
     {
         return radius;
-    }
-
-    @Override
-    public Color getMaterialColor(Vector intersectionPoint)
-    {
-        return getMaterialColor();
     }
 
     @Override
