@@ -141,11 +141,16 @@ public class Scene
     private Ray getShadowRay(Vector pointToCheck)
     {
         double epsilon = 0.00001;
-        Vector direction = getLight().getDirectionToLight().subtract(pointToCheck).normalize();
+        Vector direction = getRayDirection(getLight().getDirectionToLight(), pointToCheck);
         Ray ray = new Ray(pointToCheck, direction);
         Vector newOrigin = ray.getLocation(epsilon);
         ray = new Ray(newOrigin, direction);
         return ray;
+    }
+
+    private Vector getRayDirection(Vector point, Vector origin)
+    {
+        return point.subtract(origin).normalize();
     }
 
     private List<SceneObject> getSceneObjects()
@@ -159,23 +164,12 @@ public class Scene
     private Ray getRay(Vector worldSpaceCoordinate)
     {
         Vector eye = cameraSettings.getLookFrom();
-        Vector direction = worldSpaceCoordinate.subtract(eye).normalize();
+        Vector direction = getRayDirection(worldSpaceCoordinate, eye);
         return new Ray(eye, direction);
-    }
-
-    private double getNewViewportWindowPoint(int point, int pointMin, int pointMax, double newPointMin, double newPointMax)
-    {
-        return (point - pointMin) * ((newPointMin - newPointMax) / (pointMax - pointMin)) + newPointMax;
     }
 
     private int[] getRGBArrayOfColor(Color color)
     {
         return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
-    }
-
-    private int[] getRandomPixelsRGB()
-    {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        return new int[]{random.nextInt(0, 256), random.nextInt(0, 256), random.nextInt(0, 256)};
     }
 }
