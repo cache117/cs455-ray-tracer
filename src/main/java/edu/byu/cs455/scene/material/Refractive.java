@@ -26,6 +26,6 @@ public class Refractive extends Material
     @Override
     public Color calculateIlluminationModel(Vector normal, Light light, Vector eye)
     {
-        return null;
+        return getMaterialColor();
     }
 }
