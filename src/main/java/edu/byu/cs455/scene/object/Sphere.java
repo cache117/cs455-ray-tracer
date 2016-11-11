@@ -167,4 +167,12 @@ public class Sphere extends SceneObject
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return "Sphere{" +
+                "center=" + center +
+                ", radius=" + radius +
+                '}';
+    }
 }

@@ -25,6 +25,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Scene
 {
     private static final int IMAGE_DIMENSION = 512;
+    private static final int IMAGE_HEIGHT = IMAGE_DIMENSION;
+    private static final int IMAGE_WIDTH = IMAGE_DIMENSION;
 
     private final List<Sphere> spheres;
     private final List<Triangle> triangles;
@@ -72,7 +74,7 @@ public class Scene
 
     private BufferedImage rayTraceScene()
     {
-        BufferedImage image = new BufferedImage(IMAGE_DIMENSION, IMAGE_DIMENSION, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
         WritableRaster raster = image.getRaster();
         for (int x = 0; x < raster.getWidth(); ++x)
         {
@@ -89,7 +91,8 @@ public class Scene
         Vector viewingSpaceCoordinate = getViewingSpaceCoordinate(x, y);
         Vector worldSpaceCoordinate = getWorldSpaceCoordinate(viewingSpaceCoordinate);
         Ray ray = getRay(worldSpaceCoordinate);
-        return getRGBArrayOfColor(getRayColor(ray));
+        Color rayColor = getRayColor(ray);
+        return getRGBArrayOfColor(rayColor);
     }
 
     private Ray getRay(Vector worldSpaceCoordinate)
@@ -129,19 +132,7 @@ public class Scene
 
     private Vector getWorldSpaceCoordinate(Vector viewingSpaceCoordinate)
     {
-        double us = viewingSpaceCoordinate.x();
-        double vs = viewingSpaceCoordinate.y();
-        double ws = viewingSpaceCoordinate.z();
-
-        Vector n = cameraSettings.getN();
-        Vector u = cameraSettings.getU();
-        Vector v = cameraSettings.getV();
-
-        //s_world = LookAt + us * u + vs * v + ws * w
-        return cameraSettings.getLookAt()
-                .add(u.multiply(us))
-                .add(v.multiply(vs))
-                .add(n.multiply(ws));
+        return viewingSpaceCoordinate;
     }
 
     private Vector getRayDirection(Vector worldSpaceCoordinate, Vector eye)
@@ -152,20 +143,24 @@ public class Scene
     private Vector getViewingSpaceCoordinate(int viewportI, int viewportJ)
     {
         double viewportSize = cameraSettings.getViewPortSize();
-        int iMin = 0;
-        int iMax = IMAGE_DIMENSION - 1;
+        double iStep = (viewportSize * 2) / (double) IMAGE_WIDTH;
+        double jStep = (viewportSize * 2) / (double) IMAGE_HEIGHT;
+        double u = viewportI * iStep + (iStep / 2) - viewportSize;
+        double v = viewportJ * jStep + (jStep / 2) - viewportSize;
+        double w = 0;
+        return new Vector(u, v, w);
+
+        /*int iMin = 0;
+        int iMax = IMAGE_DIMENSION;
         double uMax = viewportSize;
         double uMin = -viewportSize;
         double uNew = getNewViewportWindowPoint(viewportI, iMin, iMax, uMin, uMax);
 
         int jMin = 0;
-        int jMax = IMAGE_DIMENSION - 1;
+        int jMax = IMAGE_DIMENSION;
         double vMax = viewportSize;
         double vMin = -viewportSize;
-        double vNew = getNewViewportWindowPoint(viewportJ, jMin, jMax, vMin, vMax);
-
-        double wNew = 0;
-        return new Vector(uNew, vNew, wNew);
+        double vNew = getNewViewportWindowPoint(viewportJ, jMin, jMax, vMin, vMax);*/
     }
 
     private double getNewViewportWindowPoint(int point, int pointMin, int pointMax, double newPointMin, double newPointMax)

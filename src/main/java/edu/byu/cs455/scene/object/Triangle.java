@@ -187,4 +187,14 @@ public class Triangle extends SceneObject
         }
         return coordinate;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Triangle{" +
+                "a=" + a +
+                ", b=" + b +
+                ", c=" + c +
+                '}';
+    }
 }

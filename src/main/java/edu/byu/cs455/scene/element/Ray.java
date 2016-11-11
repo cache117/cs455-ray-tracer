@@ -28,4 +28,13 @@ public class Ray
     {
         return origin.add(direction.multiply(magnitude));
     }
+
+    @Override
+    public String toString()
+    {
+        return "Ray{" +
+                "origin=" + origin +
+                ", direction=" + direction +
+                '}';
+    }
 }
