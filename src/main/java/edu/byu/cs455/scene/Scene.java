@@ -88,13 +88,13 @@ public class Scene
 
     private int[] rayTracePixel(int x, int y)
     {
-        Vector worldSpaceOrigin = getVector(x, y);
+        Vector worldSpaceOrigin = getWorldSpaceCoordinate(x, y);
         Ray ray = getRay(worldSpaceOrigin);
         Color colorSeen = getRayColor(ray);
         return getRGBArrayOfColor(colorSeen);
     }
 
-    private Vector getVector(int i, int j)
+    private Vector getWorldSpaceCoordinate(int i, int j)
     {
         double viewportSize = cameraSettings.getViewPortSize();
         double iStep = (viewportSize * 2) / (double) IMAGE_WIDTH;
@@ -133,11 +133,10 @@ public class Scene
         return objects;
     }
 
-    private Ray getRay(Vector worldSpaceOrigin)
+    private Ray getRay(Vector worldSpaceCoordinate)
     {
-//        return new Ray(worldSpaceOrigin, new Vector(0, 0, 1));
         Vector eye = cameraSettings.getLookFrom();
-        Vector direction = worldSpaceOrigin.subtract(eye).normalize();
+        Vector direction = worldSpaceCoordinate.subtract(eye).normalize();
         return new Ray(eye, direction);
     }
 
