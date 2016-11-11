@@ -1,6 +1,6 @@
 package edu.byu.cs455.scene.object;
 
-import edu.byu.cs455.scene.element.Light;
+import edu.byu.cs455.scene.Scene;
 import edu.byu.cs455.scene.element.Ray;
 import edu.byu.cs455.scene.element.Vector;
 import edu.byu.cs455.scene.material.Material;
@@ -19,10 +19,10 @@ public abstract class SceneObject
         this.material = material;
     }
 
-    public Color calculateIlluminationModel(Vector intersectionPoint, Light light, Vector eye)
+    public Color calculateIlluminationModel(Vector intersectionPoint, boolean isInShadow, Scene scene)
     {
         Vector normal = getNormalAtIntersection(intersectionPoint);
-        return material.calculateIlluminationModel(normal, light, eye);
+        return material.calculateIlluminationModel(normal, isInShadow, scene);
     }
 
     public abstract Vector getIntersectionVector(Ray ray);

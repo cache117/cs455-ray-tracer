@@ -1,6 +1,6 @@
 package edu.byu.cs455.scene.material;
 
-import edu.byu.cs455.scene.element.Light;
+import edu.byu.cs455.scene.Scene;
 import edu.byu.cs455.scene.element.Vector;
 
 import java.awt.*;
@@ -31,19 +31,20 @@ public class Diffuse extends Material
     }
 
     @Override
-    public Color calculateIlluminationModel(Vector normal, Light light, Vector eye)
+    public Color calculateIlluminationModel(Vector normal, boolean isInShadow, Scene scene)
     {
         //c = cr * ca + cr * cl * max(0, n \dot l)) + cl * cp * max(0, e \dot r)^p
-        Vector lightSourceColor = getColorVector(light.getLightColor()); //cl
+        Vector lightSourceColor = getColorVector(scene.getLight().getLightColor()); //cl
         Vector diffuseReflectanceColor = getColorVector(getMaterialColor()); //cr
-        Vector ambientColor = getColorVector(light.getAmbientLightColor()); //ca
+        Vector ambientColor = getColorVector(scene.getLight().getAmbientLightColor()); //ca
         Vector specularHighlightColor = getColorVector(getSpecularHighlight()); //cp
-        Vector directionToLight = light.getDirectionToLight(); //l
+        Vector directionToLight = scene.getLight().getDirectionToLight(); //l
         Vector reflectionVector = getReflectionVector(normal, directionToLight); //r
 
+        double visibilityTerm = isInShadow ? 1 : 0;
         Vector ambientTerm = getAmbientTerm(diffuseReflectanceColor, ambientColor);
-        Vector diffuseTerm = getDiffuseTerm(diffuseReflectanceColor, lightSourceColor, getLambertianComponent(normal, directionToLight));
-        Vector phongTerm = getPhongTerm(lightSourceColor, specularHighlightColor, getPhongComponent(eye, reflectionVector, getPhongConstant()));
+        Vector diffuseTerm = getDiffuseTerm(diffuseReflectanceColor, lightSourceColor, getLambertianComponent(normal, directionToLight)).multiply(visibilityTerm);
+        Vector phongTerm = getPhongTerm(lightSourceColor, specularHighlightColor, getPhongComponent(scene.getCameraSettings().getLookFrom(), reflectionVector, getPhongConstant())).multiply(visibilityTerm);
         return addColorTermsTogether(ambientTerm, diffuseTerm, phongTerm);
     }
 

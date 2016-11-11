@@ -1,6 +1,6 @@
 package edu.byu.cs455.scene.material;
 
-import edu.byu.cs455.scene.element.Light;
+import edu.byu.cs455.scene.Scene;
 import edu.byu.cs455.scene.element.Vector;
 
 import java.awt.*;
@@ -24,7 +24,7 @@ public class Refractive extends Material
     }
 
     @Override
-    public Color calculateIlluminationModel(Vector normal, Light light, Vector eye)
+    public Color calculateIlluminationModel(Vector normal, boolean isInShadow, Scene scene)
     {
         return getMaterialColor();
     }
