@@ -118,7 +118,7 @@ public class Scene
                 if (intersection.z() < closest)
                 {
                     closest = intersection.z();
-                    colorSeen = sceneObject.getMaterialColor(intersection, getLight());
+                    colorSeen = sceneObject.calculateIlluminationModel(intersection, getLight(), cameraSettings.getLookFrom());
                 }
             }
         }
