@@ -38,4 +38,10 @@ public class PlanePoint
     {
         return new PlanePoint(this.getU() - other.getU(), this.getV() - other.getV());
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format("PlanePoint{%f, %f}", planePoint.x, planePoint.y);
+    }
 }

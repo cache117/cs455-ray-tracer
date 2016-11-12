@@ -43,8 +43,10 @@ public class Diffuse extends Material
 
         double visibilityTerm = isInShadow ? 1 : 0;
         Vector ambientTerm = getAmbientTerm(diffuseReflectanceColor, ambientColor);
-        Vector diffuseTerm = getDiffuseTerm(diffuseReflectanceColor, lightSourceColor, getLambertianComponent(normal, directionToLight)).multiply(visibilityTerm);
-        Vector phongTerm = getPhongTerm(lightSourceColor, specularHighlightColor, getPhongComponent(scene.getCameraSettings().getLookFrom(), reflectionVector, getPhongConstant())).multiply(visibilityTerm);
+        Vector diffuseTerm = getDiffuseTerm(diffuseReflectanceColor, lightSourceColor, getLambertianComponent(normal, directionToLight))
+                .multiply(visibilityTerm);
+        Vector phongTerm = getPhongTerm(lightSourceColor, specularHighlightColor, getPhongComponent(scene.getCameraSettings().getLookFrom(), reflectionVector, getPhongConstant()))
+                .multiply(visibilityTerm);
         return addColorTermsTogether(ambientTerm, diffuseTerm, phongTerm);
     }
 

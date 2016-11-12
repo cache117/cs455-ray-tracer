@@ -1,12 +1,10 @@
 package edu.byu.cs455.scene.object;
 
-import edu.byu.cs455.scene.element.Light;
 import edu.byu.cs455.scene.element.PlanePoint;
 import edu.byu.cs455.scene.element.Ray;
 import edu.byu.cs455.scene.element.Vector;
 import edu.byu.cs455.scene.material.Material;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +41,7 @@ public class Triangle extends SceneObject
     @Override
     public Vector getIntersectionVector(Ray ray)
     {
-        Vector planeIntersectionVector = getPlaneIntersectionVector(ray, getPlaneNormal());
+        Vector planeIntersectionVector = getPlaneIntersectionVector(ray);
         if (planeIntersectionVector != null)
         {
             if (isIntersectionVectorInsideTriangle(planeIntersectionVector))
@@ -59,6 +57,12 @@ public class Triangle extends SceneObject
         {
             return null;
         }
+    }
+
+    private double getPlaneDistance()
+    {
+        return b.dotProduct(getPlaneNormal());
+        //return d;
     }
 
     @Override
@@ -127,19 +131,19 @@ public class Triangle extends SceneObject
         return numCrossings;
     }
 
-    private Vector getPlaneIntersectionVector(Ray ray, Vector planeNormal)
+    private Vector getPlaneIntersectionVector(Ray ray)
     {
         //t = -(p_n \dot r_o + d)/(p_n \dot r_d)
-        double denominator = ray.getDirection().dotProduct(planeNormal);
+        double vd = getPlaneNormal().dotProduct(ray.getDirection());
         //(p_n \dot r_d) == 0, parallel. (p_n \dot r_d) > 0 Plane normal pointing away from ray.
-        if (denominator >= 0)
+        if (vd >= 0)
         {
             return null;
         }
-        double distance = planeNormal.distance(0d, 0d, 0d);
-        double intersectionDistance = -(planeNormal.dotProduct(ray.getOrigin()) + distance) / denominator;
-        //intersectionDistance <= 0 means the "intersection" is behind the ray, so not a real intersection
+        double vo = -(getPlaneNormal().dotProduct(ray.getOrigin()) + getPlaneDistance());
+        double intersectionDistance = vo / vd;
 
+        //intersectionDistance <= 0 means the "intersection" is behind the ray, so not a real intersection
         return (intersectionDistance <= 0) ? null : ray.getLocation(intersectionDistance);
     }
 
@@ -162,7 +166,7 @@ public class Triangle extends SceneObject
     {
         Vector v1 = a.subtract(b);
         Vector v2 = c.subtract(b);
-        return v1.crossProduct(v2);
+        return v1.crossProduct(v2).normalize();
     }
 
     private int determineSignHolder(PlanePoint planePoint)

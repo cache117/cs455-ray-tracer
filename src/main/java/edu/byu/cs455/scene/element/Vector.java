@@ -126,6 +126,11 @@ public class Vector
         return new Vector(vector.crossProduct(vec.getVector()));
     }
 
+    public double length()
+    {
+        return distance(0, 0, 0);
+    }
+
     @Override
     public boolean equals(Object o)
     {

@@ -108,7 +108,8 @@ public class Scene
     private Color getRayColor(Ray ray)
     {
         double closest = Integer.MAX_VALUE;
-        Color colorSeen = getLight().getBackgroundColor();
+        Vector actualIntersection = null;
+        SceneObject actualSceneObject = null;
         for (SceneObject sceneObject : getSceneObjects())
         {
             Vector intersection = sceneObject.getIntersectionVector(ray);
@@ -117,11 +118,14 @@ public class Scene
                 if (intersection.z() < closest)
                 {
                     closest = intersection.z();
-                    colorSeen = sceneObject.calculateIlluminationModel(intersection, isInShadow(intersection), this);
+                    actualIntersection = intersection;
+                    actualSceneObject = sceneObject;
                 }
             }
         }
-        return colorSeen;
+        if (actualIntersection != null)
+            return actualSceneObject.calculateIlluminationModel(actualIntersection, isInShadow(actualIntersection), this);
+        return getLight().getBackgroundColor();
     }
 
     private boolean isInShadow(Vector pointToCheck)
