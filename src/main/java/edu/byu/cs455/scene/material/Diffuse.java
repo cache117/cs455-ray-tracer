@@ -1,6 +1,7 @@
 package edu.byu.cs455.scene.material;
 
 import edu.byu.cs455.scene.Scene;
+import edu.byu.cs455.scene.element.Ray;
 import edu.byu.cs455.scene.element.Vector;
 
 import java.awt.*;
@@ -31,21 +32,36 @@ public class Diffuse extends Material
     }
 
     @Override
-    public Color calculateIlluminationModel(Vector normal, boolean isInShadow, Scene scene)
+    public Color calculateIlluminationModel(Vector normal, boolean isInShadow, Scene scene, Ray ray, Vector intersectionPoint)
     {
         //c = cr * ca + cr * cl * max(0, n \dot l)) + cl * cp * max(0, e \dot r)^p
-        Vector lightSourceColor = getColorVector(scene.getLight().getLightColor()); //cl
+        Vector lightSourceColor = getColorVector(scene.getLightColor()); //cl
         Vector diffuseReflectanceColor = getColorVector(getMaterialColor()); //cr
-        Vector ambientColor = getColorVector(scene.getLight().getAmbientLightColor()); //ca
+        Vector ambientColor = getColorVector(scene.getAmbientLightColor()); //ca
         Vector specularHighlightColor = getColorVector(getSpecularHighlight()); //cp
-        Vector directionToLight = scene.getLight().getDirectionToLight(); //l
-        Vector reflectionVector = getReflectionVector(normal, directionToLight); //r
+        Vector directionToLight = scene.getDirectionToLight().subtract(intersectionPoint)
+                .normalize(); //l
+        Vector reflectionVector = getReflectionVector(normal, directionToLight)
+                .normalize(); //r
 
-        double visibilityTerm = isInShadow ? 1 : 0;
-        Vector ambientTerm = getAmbientTerm(diffuseReflectanceColor, ambientColor);
-        Vector diffuseTerm = getDiffuseTerm(diffuseReflectanceColor, lightSourceColor, getLambertianComponent(normal, directionToLight))
+        //double visibilityTerm = isInShadow ? 1 : 0;
+        double visibilityTerm = 1;
+        Vector ambientTerm = getAmbientTerm(diffuseReflectanceColor,
+                ambientColor);
+        Vector diffuseTerm = getDiffuseTerm(diffuseReflectanceColor,
+                lightSourceColor,
+                getLambertianComponent(normal,
+                        directionToLight
+                )
+        )
                 .multiply(visibilityTerm);
-        Vector phongTerm = getPhongTerm(lightSourceColor, specularHighlightColor, getPhongComponent(scene.getCameraSettings().getLookFrom(), reflectionVector, getPhongConstant()))
+        Vector phongTerm = getPhongTerm(lightSourceColor,
+                specularHighlightColor,
+                getPhongComponent(scene.getLookFrom(),
+                        reflectionVector,
+                        getPhongConstant()
+                )
+        )
                 .multiply(visibilityTerm);
         return addColorTermsTogether(ambientTerm, diffuseTerm, phongTerm);
     }
@@ -77,7 +93,7 @@ public class Diffuse extends Material
 
     private Vector getReflectionVector(Vector normal, Vector directionToLight)
     {
-        return normal.multiply(2).multiply(normal.crossProduct(directionToLight)).subtract(directionToLight);
+        return normal.multiply(2).multiply(normal.dotProduct(directionToLight)).subtract(directionToLight);
     }
 
     private double getPhongComponent(Vector eye, Vector reflection, double phongConstant)

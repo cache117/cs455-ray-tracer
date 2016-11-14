@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by cstaheli on 11/1/2016.
@@ -56,9 +55,34 @@ public class Scene
         return cameraSettings;
     }
 
+    public Vector getLookFrom()
+    {
+        return cameraSettings.getLookFrom();
+    }
+
     public Light getLight()
     {
         return light;
+    }
+
+    public Vector getDirectionToLight()
+    {
+        return light.getDirectionToLight();
+    }
+
+    public Color getLightColor()
+    {
+        return light.getLightColor();
+    }
+
+    public Color getAmbientLightColor()
+    {
+        return light.getAmbientLightColor();
+    }
+
+    public Color getBackgroundColor()
+    {
+        return light.getBackgroundColor();
     }
 
     public void rayTraceToFile(String fileName)
@@ -124,7 +148,7 @@ public class Scene
             }
         }
         if (actualIntersection != null)
-            return actualSceneObject.calculateIlluminationModel(actualIntersection, isInShadow(actualIntersection), this);
+            return actualSceneObject.calculateIlluminationModel(actualIntersection, isInShadow(actualIntersection), this,ray);
         return getLight().getBackgroundColor();
     }
 

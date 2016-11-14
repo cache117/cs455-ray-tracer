@@ -19,10 +19,10 @@ public abstract class SceneObject
         this.material = material;
     }
 
-    public Color calculateIlluminationModel(Vector intersectionPoint, boolean isInShadow, Scene scene)
+    public Color calculateIlluminationModel(Vector intersectionPoint, boolean isInShadow, Scene scene, Ray ray)
     {
         Vector normal = getNormalAtIntersection(intersectionPoint);
-        return material.calculateIlluminationModel(normal, isInShadow, scene);
+        return material.calculateIlluminationModel(normal, isInShadow, scene, ray, intersectionPoint);
     }
 
     public abstract Vector getIntersectionVector(Ray ray);
