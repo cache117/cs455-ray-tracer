@@ -32,9 +32,6 @@ public class Ray
     @Override
     public String toString()
     {
-        return "Ray{" +
-                "origin=" + origin +
-                ", direction=" + direction +
-                '}';
+        return String.format("Ray{origin=%s, direction=%s}", origin, direction);
     }
 }
