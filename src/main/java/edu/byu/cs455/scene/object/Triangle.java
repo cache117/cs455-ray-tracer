@@ -73,10 +73,34 @@ public class Triangle extends SceneObject
 
     private boolean isIntersectionVectorInsideTriangle(Vector planeIntersectionVector)
     {
-        List<PlanePoint> vertices = getPlanarVertices(planeIntersectionVector);
+        Vector u = a.subtract(b);
+        Vector v = c.subtract(b);
+        double uu = u.dotProduct(u);
+        double uv = u.dotProduct(v);
+        double vv = v.dotProduct(v);
+        Vector w = planeIntersectionVector.subtract(b);
+        double wu = w.dotProduct(u);
+        double wv = w.dotProduct(v);
+        double denominator = (uv * uv) - (uu * vv);
+
+        //parametric coordinates
+        double s = ((uv * wv) - (vv * wu)) / denominator;
+        if (s < 0 || s > 1)
+        {
+            return false;
+        }
+        double t = ((uv * wu) - (uu * wv)) / denominator;
+        if (t < 0 || t > 1)
+        {
+            return false;
+        }
+
+        return true;
+
+        /*List<PlanePoint> vertices = getPlanarVertices(planeIntersectionVector);
         int numCrossings = getNumCrossings(vertices);
         //odd. Means intersection is inside triangle/polygon
-        return (numCrossings % 2 != 0);
+        return (numCrossings % 2 != 0);*/
     }
 
     private List<PlanePoint> getPlanarVertices(Vector planeIntersectionVector)
@@ -134,17 +158,22 @@ public class Triangle extends SceneObject
     private Vector getPlaneIntersectionVector(Ray ray)
     {
         //t = -(p_n \dot r_o + d)/(p_n \dot r_d)
-        double vd = getPlaneNormal().dotProduct(ray.getDirection());
+        double distanceDenominator = getPlaneNormal().dotProduct(ray.getDirection());
         //(p_n \dot r_d) == 0, parallel. (p_n \dot r_d) > 0 Plane normal pointing away from ray.
-        if (vd >= 0)
+        if (distanceDenominator <= 0)
         {
             return null;
         }
-        double vo = -(getPlaneNormal().dotProduct(ray.getOrigin()) + getPlaneDistance());
-        double intersectionDistance = vo / vd;
+        //double vo = -(getPlaneNormal().dotProduct(ray.getOrigin()) + getPlaneDistance());
+        double distanceNumerator = -(getPlaneNormal().dotProduct(ray.getOrigin().subtract(b)));
+        if (distanceNumerator == 0)
+        {
+            return null;
+        }
+        double intersectionDistance = distanceNumerator / distanceDenominator;
 
-        //intersectionDistance <= 0 means the "intersection" is behind the ray, so not a real intersection
-        return (intersectionDistance <= 0) ? null : ray.getLocation(intersectionDistance);
+        //intersectionDistance < 0 means the "intersection" is behind the ray, so not a real intersection
+        return intersectionDistance >= 0 ? ray.getLocation(intersectionDistance) : null;
     }
 
     private PlanePoint projectOnto2DPlane(Coordinate strippedCoordinate, Vector vector)

@@ -39,7 +39,7 @@ public class Diffuse extends Material
         Vector diffuseReflectanceColor = getColorVector(getMaterialColor()); //cr
         Vector ambientColor = getColorVector(scene.getAmbientLightColor()); //ca
         Vector specularHighlightColor = getColorVector(getSpecularHighlight()); //cp
-        Vector directionToLight = scene.getDirectionToLight().subtract(intersectionPoint)
+        Vector directionToLight = scene.getDirectionToLight()
                 .normalize(); //l
         Vector reflectionVector = getReflectionVector(normal, directionToLight)
                 .normalize(); //r
@@ -98,6 +98,14 @@ public class Diffuse extends Material
 
     private double getPhongComponent(Vector eye, Vector reflection, double phongConstant)
     {
-        return Math.pow(Math.max(0, eye.dotProduct(reflection)), phongConstant);
+        double angleBetweenEyeAndReflection = eye.dotProduct(reflection);
+        angleBetweenEyeAndReflection = Math.max(0, angleBetweenEyeAndReflection);
+        return Math.pow(angleBetweenEyeAndReflection, phongConstant);
+    }
+
+    private double getLambertianComponent(Vector normal, Vector lightDirection)
+    {
+        double angleBetweenLightAndNormal = lightDirection.dotProduct(normal);
+        return Math.max(0, angleBetweenLightAndNormal);
     }
 }

@@ -148,7 +148,7 @@ public class Scene
             }
         }
         if (actualIntersection != null)
-            return actualSceneObject.calculateIlluminationModel(actualIntersection, isInShadow(actualIntersection), this,ray);
+            return actualSceneObject.calculateIlluminationModel(actualIntersection, isInShadow(actualIntersection), this, ray);
         return getLight().getBackgroundColor();
     }
 
@@ -171,7 +171,7 @@ public class Scene
         double epsilon = 0.00001;
         Vector direction = getRayDirection(getLight().getDirectionToLight(), pointToCheck);
         Ray ray = new Ray(pointToCheck, direction);
-        Vector newOrigin = ray.getLocation(epsilon);
+        Vector newOrigin = ray.getLocation(epsilon).normalize();
         ray = new Ray(newOrigin, direction);
         return ray;
     }

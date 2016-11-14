@@ -25,12 +25,6 @@ public abstract class Material
 
     public abstract Color calculateIlluminationModel(Vector normal, boolean isInShadow, Scene scene, Ray ray, Vector intersectionPoint);
 
-    protected double getLambertianComponent(Vector normal, Vector lightDirection)
-    {
-        double angleBetweenLightAndNormal = lightDirection.dotProduct(normal);
-        return Math.max(0, angleBetweenLightAndNormal);
-    }
-
     protected Vector getColorVector(Color color)
     {
         float[] rgb = new float[3];
