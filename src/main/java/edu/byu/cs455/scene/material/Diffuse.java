@@ -44,7 +44,7 @@ public class Diffuse extends Material
         Vector reflectionVector = getReflectionVector(normal, directionToLight)
                 .normalize(); //r
 
-        //double visibilityTerm = isInShadow ? 1 : 0;
+//        double visibilityTerm = isInShadow ? 1 : 0;
         double visibilityTerm = 1;
         Vector ambientTerm = getAmbientTerm(diffuseReflectanceColor,
                 ambientColor);

@@ -38,6 +38,16 @@ public class Triangle extends SceneObject
         return c;
     }
 
+    public Vector getEdge1()
+    {
+        return getA().subtract(getB());
+    }
+
+    public Vector getEdge2()
+    {
+        return getC().subtract(getB());
+    }
+
     @Override
     public Vector getIntersectionVector(Ray ray)
     {
@@ -61,7 +71,7 @@ public class Triangle extends SceneObject
 
     private double getPlaneDistance()
     {
-        return b.dotProduct(getPlaneNormal());
+        return getB().dotProduct(getPlaneNormal());
         //return d;
     }
 
@@ -73,12 +83,12 @@ public class Triangle extends SceneObject
 
     private boolean isIntersectionVectorInsideTriangle(Vector planeIntersectionVector)
     {
-        Vector u = a.subtract(b);
-        Vector v = c.subtract(b);
+        Vector u = getEdge1();
+        Vector v = getEdge2();
         double uu = u.dotProduct(u);
         double uv = u.dotProduct(v);
         double vv = v.dotProduct(v);
-        Vector w = planeIntersectionVector.subtract(b);
+        Vector w = planeIntersectionVector.subtract(getB());
         double wu = w.dotProduct(u);
         double wv = w.dotProduct(v);
         double denominator = (uv * uv) - (uu * vv);
@@ -90,7 +100,7 @@ public class Triangle extends SceneObject
             return false;
         }
         double t = ((uv * wu) - (uu * wv)) / denominator;
-        if (t < 0 || t > 1)
+        if (t < 0 || (s + t) > 1)
         {
             return false;
         }
@@ -119,9 +129,9 @@ public class Triangle extends SceneObject
     private List<Vector> getTriangleVertices()
     {
         List<Vector> vectors = new ArrayList<>();
-        vectors.add(a);
-        vectors.add(b);
-        vectors.add(c);
+        vectors.add(getA());
+        vectors.add(getB());
+        vectors.add(getC());
         return vectors;
     }
 
@@ -165,7 +175,7 @@ public class Triangle extends SceneObject
             return null;
         }
         //double vo = -(getPlaneNormal().dotProduct(ray.getOrigin()) + getPlaneDistance());
-        double distanceNumerator = -(getPlaneNormal().dotProduct(ray.getOrigin().subtract(b)));
+        double distanceNumerator = -(getPlaneNormal().dotProduct(ray.getOrigin().subtract(getB())));
         if (distanceNumerator == 0)
         {
             return null;
@@ -193,8 +203,8 @@ public class Triangle extends SceneObject
 
     private Vector getPlaneNormal()
     {
-        Vector v1 = a.subtract(b);
-        Vector v2 = c.subtract(b);
+        Vector v1 = getEdge1();
+        Vector v2 = getEdge2();
         return v1.crossProduct(v2).normalize();
     }
 
@@ -232,9 +242,9 @@ public class Triangle extends SceneObject
     public String toString()
     {
         return "Triangle{" +
-                "a=" + a +
-                ", b=" + b +
-                ", c=" + c +
+                "a=" + getA() +
+                ", b=" + getB() +
+                ", c=" + getC() +
                 '}';
     }
 }

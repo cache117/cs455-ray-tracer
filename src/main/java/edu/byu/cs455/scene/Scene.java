@@ -169,7 +169,8 @@ public class Scene
     private Ray getShadowRay(Vector pointToCheck)
     {
         double epsilon = 0.00001;
-        Vector direction = getRayDirection(getLight().getDirectionToLight(), pointToCheck);
+        Vector direction = getRayDirection(getDirectionToLight(), pointToCheck);
+        //Vector direction = getDirectionToLight();
         Ray ray = new Ray(pointToCheck, direction);
         Vector newOrigin = ray.getLocation(epsilon).normalize();
         ray = new Ray(newOrigin, direction);
