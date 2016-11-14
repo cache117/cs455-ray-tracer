@@ -1,15 +1,13 @@
 package edu.byu.cs455.scene.object;
 
-import edu.byu.cs455.scene.element.PlanePoint;
 import edu.byu.cs455.scene.element.Ray;
 import edu.byu.cs455.scene.element.Vector;
 import edu.byu.cs455.scene.material.Material;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by cstaheli on 11/1/2016.
+ * See <a href ="http://geomalgorithms.com/a06-_intersect-2.html#intersect3D_RayTriangle()">GeoMal Algorithms</a>
+ * for information about triangle-ray intersection algorithm.
  */
 public class Triangle extends SceneObject
 {
@@ -38,12 +36,12 @@ public class Triangle extends SceneObject
         return c;
     }
 
-    public Vector getEdge1()
+    public Vector getU()
     {
         return getA().subtract(getB());
     }
 
-    public Vector getEdge2()
+    public Vector getV()
     {
         return getC().subtract(getB());
     }
@@ -52,16 +50,9 @@ public class Triangle extends SceneObject
     public Vector getIntersectionVector(Ray ray)
     {
         Vector planeIntersectionVector = getPlaneIntersectionVector(ray);
-        if (planeIntersectionVector != null)
+        if (planeIntersectionVector != null && isIntersectionVectorInsideTriangle(planeIntersectionVector))
         {
-            if (isIntersectionVectorInsideTriangle(planeIntersectionVector))
-            {
-                return planeIntersectionVector;
-            }
-            else
-            {
-                return null;
-            }
+            return planeIntersectionVector;
         }
         else
         {
@@ -69,22 +60,36 @@ public class Triangle extends SceneObject
         }
     }
 
-    private double getPlaneDistance()
+    private Vector getPlaneIntersectionVector(Ray ray)
     {
-        return getB().dotProduct(getPlaneNormal());
-        //return d;
-    }
+        double epsilon = 0.00000001;
+        Vector w0 = ray.getOrigin().subtract(getB());
+        double numerator = -(getPlaneNormal().dotProduct(w0));
+        double denominator = getPlaneNormal().dotProduct(ray.getDirection());
+        //ray is parallel to triangle plane
+        if (denominator < epsilon)
+        {
+            //ray lies in triangle plane
+            if (numerator == 0)
+            {
+                return null;
+            }
+            //ray is disjoint from plane
+            else
+            {
+                return null;
+            }
+        }
+        double intersectionDistance = numerator / denominator;
 
-    @Override
-    public Vector getNormalAtIntersection(Vector intersection)
-    {
-        return getPlaneNormal();
+        //intersectionDistance < 0 means the "intersection" is behind the ray (pointing away from plane), so not a real intersection
+        return (intersectionDistance >= 0) ? ray.getLocation(intersectionDistance) : null;
     }
 
     private boolean isIntersectionVectorInsideTriangle(Vector planeIntersectionVector)
     {
-        Vector u = getEdge1();
-        Vector v = getEdge2();
+        Vector u = getU();
+        Vector v = getV();
         double uu = u.dotProduct(u);
         double uv = u.dotProduct(v);
         double vv = v.dotProduct(v);
@@ -93,7 +98,7 @@ public class Triangle extends SceneObject
         double wv = w.dotProduct(v);
         double denominator = (uv * uv) - (uu * vv);
 
-        //parametric coordinates
+        //get and test parametric coordinates
         double s = ((uv * wv) - (vv * wu)) / denominator;
         if (s < 0 || s > 1)
         {
@@ -106,136 +111,19 @@ public class Triangle extends SceneObject
         }
 
         return true;
-
-        /*List<PlanePoint> vertices = getPlanarVertices(planeIntersectionVector);
-        int numCrossings = getNumCrossings(vertices);
-        //odd. Means intersection is inside triangle/polygon
-        return (numCrossings % 2 != 0);*/
     }
 
-    private List<PlanePoint> getPlanarVertices(Vector planeIntersectionVector)
+    @Override
+    public Vector getNormalAtIntersection(Vector intersection)
     {
-        Coordinate largestCoordinate = getLargestMagnitude(getPlaneNormal());
-        PlanePoint intersectionPoint = projectOnto2DPlane(largestCoordinate, planeIntersectionVector);
-        List<Vector> vectors = getTriangleVertices();
-        List<PlanePoint> vertices = new ArrayList<>();
-        for (Vector vector : vectors)
-        {
-            vertices.add(projectOnto2DPlane(largestCoordinate, vector).subtract(intersectionPoint));
-        }
-        return vertices;
-    }
-
-    private List<Vector> getTriangleVertices()
-    {
-        List<Vector> vectors = new ArrayList<>();
-        vectors.add(getA());
-        vectors.add(getB());
-        vectors.add(getC());
-        return vectors;
-    }
-
-    private int getNumCrossings(List<PlanePoint> vertices)
-    {
-        int numCrossings = 0;
-        int signHolder = determineSignHolder(vertices.get(0));
-        int nextSignHolder;
-        for (int i = 0; i < vertices.size(); ++i)
-        {
-            PlanePoint vertex = vertices.get(i);
-            PlanePoint nextVertex = vertices.get((i + 1) % 2);
-            nextSignHolder = determineSignHolder(vertex);
-            if (signHolder != nextSignHolder)
-            {
-                if (vertex.getU() > 0 && nextVertex.getU() > 0)
-                {
-                    ++numCrossings;
-                }
-                else if (vertex.getU() > 0 || nextVertex.getU() > 0)
-                {
-                    double uCross = vertex.getU() - (vertex.getV() * (nextVertex.getU() - vertex.getU()) / (nextVertex.getV() - vertex.getV()));
-                    if (uCross > 0)
-                    {
-                        ++numCrossings;
-                    }
-                }
-            }
-            signHolder = nextSignHolder;
-        }
-        return numCrossings;
-    }
-
-    private Vector getPlaneIntersectionVector(Ray ray)
-    {
-        //t = -(p_n \dot r_o + d)/(p_n \dot r_d)
-        double distanceDenominator = getPlaneNormal().dotProduct(ray.getDirection());
-        //(p_n \dot r_d) == 0, parallel. (p_n \dot r_d) > 0 Plane normal pointing away from ray.
-        if (distanceDenominator <= 0)
-        {
-            return null;
-        }
-        //double vo = -(getPlaneNormal().dotProduct(ray.getOrigin()) + getPlaneDistance());
-        double distanceNumerator = -(getPlaneNormal().dotProduct(ray.getOrigin().subtract(getB())));
-        if (distanceNumerator == 0)
-        {
-            return null;
-        }
-        double intersectionDistance = distanceNumerator / distanceDenominator;
-
-        //intersectionDistance < 0 means the "intersection" is behind the ray, so not a real intersection
-        return intersectionDistance >= 0 ? ray.getLocation(intersectionDistance) : null;
-    }
-
-    private PlanePoint projectOnto2DPlane(Coordinate strippedCoordinate, Vector vector)
-    {
-        switch (strippedCoordinate)
-        {
-            case X:
-                return new PlanePoint(vector.y(), vector.z());
-            case Y:
-                return new PlanePoint(vector.x(), vector.z());
-            case Z:
-                return new PlanePoint(vector.x(), vector.y());
-            default:
-                throw new RuntimeException("This is not possible unless additional coordinates have been added");
-        }
+        return getPlaneNormal();
     }
 
     private Vector getPlaneNormal()
     {
-        Vector v1 = getEdge1();
-        Vector v2 = getEdge2();
+        Vector v1 = getU();
+        Vector v2 = getV();
         return v1.crossProduct(v2).normalize();
-    }
-
-    private int determineSignHolder(PlanePoint planePoint)
-    {
-        if (planePoint.getV() < 0)
-            return -1;
-        else
-            return 1;
-    }
-
-    private enum Coordinate
-    {
-        X, Y, Z
-    }
-
-    private Coordinate getLargestMagnitude(Vector vector)
-    {
-        double largestMagnitude = Math.abs(vector.x());
-        Coordinate coordinate = Coordinate.X;
-        if (Math.abs(vector.y()) > largestMagnitude)
-        {
-            largestMagnitude = Math.abs(vector.y());
-            coordinate = Coordinate.Y;
-        }
-        if (Math.abs(vector.z()) > largestMagnitude)
-        {
-            largestMagnitude = Math.abs(vector.z());
-            coordinate = Coordinate.Z;
-        }
-        return coordinate;
     }
 
     @Override

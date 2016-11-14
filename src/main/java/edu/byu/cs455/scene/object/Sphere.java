@@ -1,11 +1,8 @@
 package edu.byu.cs455.scene.object;
 
-import edu.byu.cs455.scene.element.Light;
 import edu.byu.cs455.scene.element.Ray;
 import edu.byu.cs455.scene.element.Vector;
 import edu.byu.cs455.scene.material.Material;
-
-import java.awt.*;
 
 /**
  * Created by cstaheli on 11/1/2016.
@@ -112,40 +109,49 @@ public class Sphere extends SceneObject
             //1 real root. Use it.
             if (squareRoot == 0)
             {
-                double root = (-b / 2);
-                if (root == 0)
-                {
-                    return -1;
-                }
-                else
-                {
-                    return root;
-                }
+                return calculateSingleBestRoot(b);
             }
             //1 or 2 real roots
             else
             {
-                double smallerQuadratic = calculateQuadratic(b, squareRoot, true);
-                //smaller intersection behind object. Check next real root.
-                if (smallerQuadratic <= 0)
-                {
-                    double largerQuadratic = calculateQuadratic(b, squareRoot, false);
-                    //both intersections behind object. No useful roots.
-                    if (largerQuadratic <= 0)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return largerQuadratic;
-                    }
-                }
-                else
-                {
-                    return smallerQuadratic;
-                }
+                return calculateBestOfTwoRoots(b, squareRoot);
             }
+        }
+    }
 
+    private double calculateSingleBestRoot(double b)
+    {
+        double root = (-b / 2);
+        if (root == 0)
+        {
+            return -1;
+        }
+        else
+        {
+            return root;
+        }
+    }
+
+    private double calculateBestOfTwoRoots(double b, double squareRoot)
+    {
+        double smallerQuadratic = calculateQuadratic(b, squareRoot, true);
+        //smaller intersection behind object. Check next real root.
+        if (smallerQuadratic <= 0)
+        {
+            double largerQuadratic = calculateQuadratic(b, squareRoot, false);
+            //both intersections behind object. No useful roots.
+            if (largerQuadratic <= 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return largerQuadratic;
+            }
+        }
+        else
+        {
+            return smallerQuadratic;
         }
     }
 

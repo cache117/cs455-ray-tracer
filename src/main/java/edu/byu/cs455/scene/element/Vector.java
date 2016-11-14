@@ -86,26 +86,6 @@ public class Vector
         return new Vector(vector.normalize());
     }
 
-    public Vector midpoint(double x, double y, double z)
-    {
-        return new Vector(vector.midpoint(x, y, z));
-    }
-
-    public Vector midpoint(Vector vec)
-    {
-        return new Vector(this.vector.midpoint(vec.getVector()));
-    }
-
-    public double angle(double x, double y, double z)
-    {
-        return vector.angle(x, y, z);
-    }
-
-    public double angle(Vector v1, Vector v2)
-    {
-        return vector.angle(v1.vector, v2.vector);
-    }
-
     public double dotProduct(double x, double y, double z)
     {
         return vector.dotProduct(x, y, z);
