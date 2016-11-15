@@ -67,7 +67,7 @@ public class Triangle extends SceneObject
         double numerator = -(getPlaneNormal().dotProduct(w0));
         double denominator = getPlaneNormal().dotProduct(ray.getDirection());
         //ray is parallel to triangle plane
-        if (denominator < epsilon)
+        if (Math.abs(denominator) < epsilon)
         {
             //ray lies in triangle plane
             if (numerator == 0)
