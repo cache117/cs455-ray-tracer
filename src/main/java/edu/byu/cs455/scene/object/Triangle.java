@@ -83,13 +83,16 @@ public class Triangle extends SceneObject
         double intersectionDistance = numerator / denominator;
 
         //intersectionDistance < 0 means the "intersection" is behind the ray (pointing away from plane), so not a real intersection
-        return (intersectionDistance >= 0) ? ray.getLocation(intersectionDistance) : null;
+        return (intersectionDistance >= 0) ? ray.getLocationWithMagnitude(intersectionDistance) : null;
     }
 
     private boolean isIntersectionVectorInsideTriangle(Vector planeIntersectionVector)
     {
+        //Get edges of triangle
         Vector u = getU();
         Vector v = getV();
+
+        //Pre-compute unique five dot-products
         double uu = u.dotProduct(u);
         double uv = u.dotProduct(v);
         double vv = v.dotProduct(v);

@@ -27,6 +27,15 @@ public class Refractive extends Material
     @Override
     public Color calculateIlluminationModel(Vector normal, boolean isInShadow, Scene scene, Ray ray, Vector intersectionPoint)
     {
-        return getMaterialColor();
+        if (isInShadow)
+        {
+            return getColorInShadow(scene);
+        }
+        else
+        {
+            Vector newDirection = ray.getDirection();
+            Ray refractionRay = Ray.translateRayByEpsilon(new Ray(ray.getOrigin(), newDirection));
+            return scene.getRayColor(refractionRay);
+        }
     }
 }

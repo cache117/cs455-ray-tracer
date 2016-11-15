@@ -70,11 +70,6 @@ public class Diffuse extends Material
         return getVectorColor(ambientTerm.add(diffuseTerm).add(phongTerm));
     }
 
-    private Vector getAmbientTerm(Vector diffuseReflectanceColor, Vector ambientColor)
-    {
-        return diffuseReflectanceColor.multiply(ambientColor);
-    }
-
     private Vector getDiffuseTerm(Vector diffuseReflectanceColor, Vector lightColor, double lambertianComponent)
     {
         return multiplyColorsWithComponentTerm(diffuseReflectanceColor, lightColor, lambertianComponent);
@@ -88,11 +83,6 @@ public class Diffuse extends Material
     private Vector multiplyColorsWithComponentTerm(Vector first, Vector second, double component)
     {
         return first.multiply(second).multiply(component);
-    }
-
-    private Vector getReflectionVector(Vector normal, Vector directionToLight)
-    {
-        return normal.multiply(2).multiply(normal.dotProduct(directionToLight)).subtract(directionToLight);
     }
 
     private double getPhongComponent(Vector eye, Vector reflection, double phongConstant)

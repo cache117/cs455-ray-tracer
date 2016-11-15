@@ -42,7 +42,7 @@ public class Sphere extends SceneObject
         }
         else
         {
-            return ray.getLocation(bestRoot);
+            return ray.getLocationWithMagnitude(bestRoot);
         }
     }
 

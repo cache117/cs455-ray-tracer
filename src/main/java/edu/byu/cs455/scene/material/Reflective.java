@@ -19,6 +19,17 @@ public class Reflective extends Material
     @Override
     public Color calculateIlluminationModel(Vector normal, boolean isInShadow, Scene scene, Ray ray, Vector intersectionPoint)
     {
-        return getMaterialColor();
+        if (isInShadow)
+        {
+            return getColorInShadow(scene);
+        }
+        else
+        {
+            Vector reflectionVector = getReflectionVector(normal, scene.getDirectionToLight().normalize())
+                    .normalize();
+            Ray reflectionRay = Ray.translateRayByEpsilon(new Ray(intersectionPoint, reflectionVector));
+            return scene.getRayColor(reflectionRay);
+        }
     }
+
 }

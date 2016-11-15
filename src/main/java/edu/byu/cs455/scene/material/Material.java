@@ -54,4 +54,22 @@ public abstract class Material
         else
             return (float) colorComponent;
     }
+
+    protected Vector getReflectionVector(Vector normal, Vector directionToLight)
+    {
+        return normal.multiply(2).multiply(directionToLight.dotProduct(normal)).subtract(directionToLight);
+    }
+
+    protected Vector getAmbientTerm(Vector diffuseReflectanceColor, Vector ambientColor)
+    {
+        return diffuseReflectanceColor.multiply(ambientColor);
+    }
+
+    protected Color getColorInShadow(Scene scene)
+    {
+        Vector diffuseReflectanceColor = getColorVector(getMaterialColor());
+        Vector ambientColor = getColorVector(scene.getAmbientLightColor());
+        Vector ambientTerm = getAmbientTerm(diffuseReflectanceColor, ambientColor);
+        return getVectorColor(ambientTerm);
+    }
 }

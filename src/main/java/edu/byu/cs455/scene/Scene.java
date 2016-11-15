@@ -27,10 +27,13 @@ public class Scene
     private static final int IMAGE_HEIGHT = IMAGE_DIMENSION;
     private static final int IMAGE_WIDTH = IMAGE_DIMENSION;
 
+    public static final int MAXIMUM_TRACE_DEPTH = 2;
+
     private final List<Sphere> spheres;
     private final List<Triangle> triangles;
     private final CameraSettings cameraSettings;
     private final Light light;
+    private int tracingDepth;
 
     public Scene(List<Sphere> spheres, List<Triangle> triangles, CameraSettings cameraSettings, Light light)
     {
@@ -38,6 +41,7 @@ public class Scene
         this.triangles = triangles;
         this.cameraSettings = cameraSettings;
         this.light = light;
+        tracingDepth = 0;
     }
 
     public List<Sphere> getSpheres()
@@ -85,6 +89,21 @@ public class Scene
         return light.getBackgroundColor();
     }
 
+    private int getTracingDepth()
+    {
+        return tracingDepth;
+    }
+
+    private void incrementTracingDepth()
+    {
+        ++tracingDepth;
+    }
+
+    private void resetTracingDepth()
+    {
+        tracingDepth = 0;
+    }
+
     public void rayTraceToFile(String fileName)
     {
         try
@@ -112,6 +131,7 @@ public class Scene
 
     private int[] rayTracePixel(int x, int y)
     {
+        resetTracingDepth();
         Vector worldSpaceOrigin = getWorldSpaceCoordinate(x, y);
         Ray ray = getRay(worldSpaceOrigin);
         Color colorSeen = getRayColor(ray);
@@ -129,8 +149,10 @@ public class Scene
         return new Vector(u, v, w);
     }
 
-    private Color getRayColor(Ray ray)
+    public Color getRayColor(Ray ray)
     {
+        incrementTracingDepth();
+
         double closest = Integer.MAX_VALUE;
         Vector actualIntersection = null;
         SceneObject actualSceneObject = null;
@@ -152,7 +174,8 @@ public class Scene
             return actualSceneObject.calculateIlluminationModel(actualIntersection,
                     isInShadow(actualIntersection),
                     this,
-                    ray);
+                    ray,
+                    getTracingDepth());
         }
         else
         {
@@ -178,10 +201,7 @@ public class Scene
     {
         double epsilon = 0.00001;
         Vector direction = getRayDirection(getDirectionToLight(), pointToCheck);
-        Ray ray = new Ray(pointToCheck, direction);
-        Vector newOrigin = ray.getLocation(epsilon);
-        ray = new Ray(newOrigin, direction);
-        return ray;
+        return Ray.translateRayByEpsilon(new Ray(pointToCheck, direction));
     }
 
     private Vector getRayDirection(Vector point, Vector origin)
