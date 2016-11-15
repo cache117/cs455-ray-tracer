@@ -39,62 +39,22 @@ public class Diffuse extends Material
         Vector diffuseReflectanceColor = getColorVector(getMaterialColor()); //cr
         Vector ambientColor = getColorVector(scene.getAmbientLightColor()); //ca
         Vector specularHighlightColor = getColorVector(getSpecularHighlight()); //cp
-        Vector directionToLight = scene.getDirectionToLight()
-                .normalize(); //l
-        Vector reflectionVector = getReflectionVector(normal, directionToLight)
-                .normalize(); //r
+        Vector directionToLight = scene.getDirectionToLight().normalize(); //l
+        double angleBetweenLightAndNormal = Math.abs(directionToLight.dotProduct(normal));
+        Vector reflectionVector = normal.multiply(2).multiply(angleBetweenLightAndNormal).subtract(directionToLight).normalize(); //r
 
         double visibilityTerm = isInShadow ? 0 : 1;
-        Vector ambientTerm = getAmbientTerm(diffuseReflectanceColor,
-                ambientColor);
-        Vector diffuseTerm = getDiffuseTerm(diffuseReflectanceColor,
-                lightSourceColor,
-                getLambertianComponent(normal,
-                        directionToLight
-                )
-        )
-                .multiply(visibilityTerm);
-        Vector phongTerm = getPhongTerm(lightSourceColor,
-                specularHighlightColor,
-                getPhongComponent(scene.getLookFrom(),
-                        reflectionVector,
-                        getPhongConstant()
-                )
-        )
-                .multiply(visibilityTerm);
-        return addColorTermsTogether(ambientTerm, diffuseTerm, phongTerm);
-    }
+        Vector ambientTerm = diffuseReflectanceColor.multiply(ambientColor);
 
-    private Color addColorTermsTogether(Vector ambientTerm, Vector diffuseTerm, Vector phongTerm)
-    {
+        double lambertianComponent = Math.max(0, angleBetweenLightAndNormal);
+        Vector diffuseTerm = diffuseReflectanceColor.multiply(lightSourceColor).multiply(lambertianComponent).multiply(visibilityTerm);
+
+        double angleBetweenEyeAndReflection = scene.getLookFrom().dotProduct(reflectionVector);
+        angleBetweenEyeAndReflection = Math.max(0, angleBetweenEyeAndReflection);
+        double phongComponent = Math.pow(angleBetweenEyeAndReflection, getPhongConstant());
+        Vector phongTerm = lightSourceColor.multiply(specularHighlightColor).multiply(phongComponent).multiply(visibilityTerm);
+
         return getVectorColor(ambientTerm.add(diffuseTerm).add(phongTerm));
     }
 
-    private Vector getDiffuseTerm(Vector diffuseReflectanceColor, Vector lightColor, double lambertianComponent)
-    {
-        return multiplyColorsWithComponentTerm(diffuseReflectanceColor, lightColor, lambertianComponent);
-    }
-
-    private Vector getPhongTerm(Vector lightColor, Vector specularColor, double phongComponent)
-    {
-        return multiplyColorsWithComponentTerm(lightColor, specularColor, phongComponent);
-    }
-
-    private Vector multiplyColorsWithComponentTerm(Vector first, Vector second, double component)
-    {
-        return first.multiply(second).multiply(component);
-    }
-
-    private double getPhongComponent(Vector eye, Vector reflection, double phongConstant)
-    {
-        double angleBetweenEyeAndReflection = eye.dotProduct(reflection);
-        angleBetweenEyeAndReflection = Math.max(0, angleBetweenEyeAndReflection);
-        return Math.pow(angleBetweenEyeAndReflection, phongConstant);
-    }
-
-    private double getLambertianComponent(Vector normal, Vector lightDirection)
-    {
-        double angleBetweenLightAndNormal = lightDirection.dotProduct(normal);
-        return Math.max(0, angleBetweenLightAndNormal);
-    }
 }

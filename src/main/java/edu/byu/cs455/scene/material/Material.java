@@ -61,21 +61,11 @@ public abstract class Material
         }
     }
 
-    protected Vector getReflectionVector(Vector normal, Vector directionToLight)
-    {
-        return normal.multiply(2).multiply(directionToLight.dotProduct(normal)).subtract(directionToLight);
-    }
-
-    protected Vector getAmbientTerm(Vector diffuseReflectanceColor, Vector ambientColor)
-    {
-        return diffuseReflectanceColor.multiply(ambientColor);
-    }
-
     protected Color getColorInShadow(Scene scene)
     {
         Vector diffuseReflectanceColor = getColorVector(getMaterialColor());
         Vector ambientColor = getColorVector(scene.getAmbientLightColor());
-        Vector ambientTerm = getAmbientTerm(diffuseReflectanceColor, ambientColor);
+        Vector ambientTerm = diffuseReflectanceColor.multiply(ambientColor);
         return getVectorColor(ambientTerm);
     }
 }
