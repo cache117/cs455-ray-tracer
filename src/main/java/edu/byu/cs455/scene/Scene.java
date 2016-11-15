@@ -126,6 +126,17 @@ public class Scene
                 raster.setPixel(x, y, rayTracePixel(x, y));
             }
         }
+        return flip(image);
+    }
+
+    private BufferedImage flip(BufferedImage image) {
+        for (int i = 0; i < image.getWidth(); i++)  {
+            for (int j = 0; j < image.getHeight() / 2; j++) {
+                int tmp = image.getRGB(i, j);
+                image.setRGB(i, j, image.getRGB(i, image.getHeight() - j - 1));
+                image.setRGB(i, image.getHeight() - j - 1, tmp);
+            }
+        }
         return image;
     }
 

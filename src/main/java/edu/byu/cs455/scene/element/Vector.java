@@ -111,6 +111,11 @@ public class Vector
         return distance(0, 0, 0);
     }
 
+    public Vector absoluteValue()
+    {
+        return new Vector(Math.abs(vector.getX()), Math.abs(vector.getY()), Math.abs(vector.getZ()));
+    }
+
     @Override
     public boolean equals(Object o)
     {

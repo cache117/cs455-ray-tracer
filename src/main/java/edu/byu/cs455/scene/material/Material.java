@@ -48,11 +48,17 @@ public abstract class Material
     private float clipToFloatColorSpace(double colorComponent)
     {
         if (colorComponent < 0.0f)
+        {
             return 0.0f;
+        }
         else if (colorComponent > 1.0f)
+        {
             return 1.0f;
+        }
         else
+        {
             return (float) colorComponent;
+        }
     }
 
     protected Vector getReflectionVector(Vector normal, Vector directionToLight)
