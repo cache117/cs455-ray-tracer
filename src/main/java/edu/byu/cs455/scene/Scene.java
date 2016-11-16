@@ -164,7 +164,7 @@ public class Scene
     {
         incrementTracingDepth();
 
-        double closest = Integer.MAX_VALUE;
+        double closest = -Integer.MAX_VALUE;
         Vector actualIntersection = null;
         SceneObject actualSceneObject = null;
         for (SceneObject sceneObject : getSceneObjects())
@@ -172,7 +172,7 @@ public class Scene
             Vector intersection = sceneObject.getIntersectionVector(ray);
             if (intersection != null)
             {
-                if (intersection.z() < closest)
+                if (intersection.z() > closest)
                 {
                     closest = intersection.z();
                     actualIntersection = intersection;
