@@ -26,8 +26,7 @@ public class Reflective extends Material
         else
         {
             Vector directionToLight = scene.getDirectionToLight().normalize();
-            Vector reflectionVector = normal.multiply(2).multiply(directionToLight.dotProduct(normal)).subtract(directionToLight)
-                    .normalize();
+            Vector reflectionVector = getReflectionVector(normal, directionToLight);
             Ray reflectionRay = Ray.translateRayByEpsilon(new Ray(intersectionPoint, reflectionVector));
             return scene.getRayColor(reflectionRay);
         }

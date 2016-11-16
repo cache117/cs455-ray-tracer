@@ -48,7 +48,7 @@ public class Main
         light = new Light(new Vector(0.0, 1.0, 0.0), new Color(1.0f, 1.0f, 1.0f), new Color(0.0f, 0.0f, 0.0f), new Color(0.2f, 0.2f, 0.2f));
         scene = new Scene(spheres, triangles, cameraSettings, light);
         scene.rayTraceToFile(args[1]);
-//
+
         spheres = new ArrayList<>();
         triangles = new ArrayList<>();
         spheres.add(new Sphere(new Vector(0.0, 0.0, 0.0), 0.2322, new Refractive(new Color(1.0f, 1.0f, 1.0f), 1.333)));

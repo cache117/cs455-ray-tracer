@@ -68,4 +68,18 @@ public abstract class Material
         Vector ambientTerm = diffuseReflectanceColor.multiply(ambientColor);
         return getVectorColor(ambientTerm);
     }
+
+    protected Vector getReflectionVector(Vector normal, Vector directionToLight)
+    {
+        return normal
+                .multiply(2)
+                .multiply(getAngleBetween(normal, directionToLight))
+                .subtract(directionToLight)
+                .normalize();
+    }
+
+    protected double getAngleBetween(Vector first, Vector second)
+    {
+        return Math.abs(first.dotProduct(second));
+    }
 }

@@ -39,22 +39,35 @@ public class Diffuse extends Material
         Vector diffuseReflectanceColor = getColorVector(getMaterialColor()); //cr
         Vector ambientColor = getColorVector(scene.getAmbientLightColor()); //ca
         Vector specularHighlightColor = getColorVector(getSpecularHighlight()); //cp
+
         Vector directionToLight = scene.getDirectionToLight().normalize(); //l
-        double angleBetweenLightAndNormal = Math.abs(directionToLight.dotProduct(normal));
-        Vector reflectionVector = normal.multiply(2).multiply(angleBetweenLightAndNormal).subtract(directionToLight).normalize(); //r
+        Vector reflectionVector = getReflectionVector(normal, directionToLight); //r
 
         double visibilityTerm = isInShadow ? 0 : 1;
-        Vector ambientTerm = diffuseReflectanceColor.multiply(ambientColor);
+        Vector ambientTerm = diffuseReflectanceColor
+                .multiply(ambientColor);
 
-        double lambertianComponent = Math.max(0, angleBetweenLightAndNormal);
-        Vector diffuseTerm = diffuseReflectanceColor.multiply(lightSourceColor).multiply(lambertianComponent).multiply(visibilityTerm);
+        Vector diffuseTerm = diffuseReflectanceColor
+                .multiply(lightSourceColor)
+                .multiply(getAngleBetween(normal,
+                        directionToLight)
+                )
+                .multiply(visibilityTerm);
 
-        double angleBetweenEyeAndReflection = scene.getLookFrom().dotProduct(reflectionVector);
-        angleBetweenEyeAndReflection = Math.max(0, angleBetweenEyeAndReflection);
-        double phongComponent = Math.pow(angleBetweenEyeAndReflection, getPhongConstant());
-        Vector phongTerm = lightSourceColor.multiply(specularHighlightColor).multiply(phongComponent).multiply(visibilityTerm);
+        double phongComponent = Math.pow(
+                getAngleBetween(
+                        scene.getLookFrom(),
+                        reflectionVector
+                ),
+                getPhongConstant());
+        Vector phongTerm = lightSourceColor
+                .multiply(specularHighlightColor)
+                .multiply(phongComponent)
+                .multiply(visibilityTerm);
 
-        return getVectorColor(ambientTerm.add(diffuseTerm).add(phongTerm));
+        return getVectorColor(ambientTerm
+                .add(diffuseTerm)
+                .add(phongTerm));
     }
 
 }
