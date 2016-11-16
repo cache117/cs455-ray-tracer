@@ -27,17 +27,17 @@ public class Main
         Light light;
         Scene scene;
 
-//        spheres = new ArrayList<>();
-//        triangles = new ArrayList<>();
-//        spheres.add(new Sphere(new Vector(0.35, 0.0, -0.1), 0.05, new Diffuse(new Color(1.0f, 1.0f, 1.0f), new Color(1.0f, 1.0f, 1.0f), 4)));
-//        spheres.add(new Sphere(new Vector(0.2, 0.0, -0.1), 0.075, new Diffuse(new Color(1.0f, 0.0f, 0.0f), new Color(1.0f, 0.5f, 0.5f), 32)));
-//        spheres.add(new Sphere(new Vector(-0.6, 0.0, 0.0), 0.3, new Diffuse(new Color(0.0f, 1.0f, 0.0f), new Color(0.5f, 1.0f, 0.5f), 32)));
-//        triangles.add(new Triangle(new Vector(0.3, -0.3, -0.4), new Vector(0.0, 0.3, -0.1), new Vector(-0.3, -0.3, 0.2), new Diffuse(new Color(0.0f, 0.0f, 1.0f), new Color(1.0f, 1.0f, 1.0f), 32)));
-//        triangles.add(new Triangle(new Vector(-0.2, 0.1, 0.1), new Vector(-0.2, -0.5, 0.2), new Vector(-0.2, 0.1, -0.3), new Diffuse(new Color(1.0f, 1.0f, 0.0f), new Color(1.0f, 1.0f, 1.0f), 4)));
-//        cameraSettings = new CameraSettings(new Vector(0.0, 0.0, 0.0), new Vector(0.0, 0.0, 1.0), new Vector(0.0, 1.0, 0.0), 28);
-//        light = new Light(new Vector(1.0, 0.0, 0.0), new Color(1.0f, 1.0f, 1.0f), new Color(0.1f, 0.1f, 0.1f), new Color(0.2f, 0.2f, 0.2f));
-//        scene = new Scene(spheres, triangles, cameraSettings, light);
-//        scene.rayTraceToFile(args[0]);
+        spheres = new ArrayList<>();
+        triangles = new ArrayList<>();
+        spheres.add(new Sphere(new Vector(0.35, 0.0, -0.1), 0.05, new Diffuse(new Color(1.0f, 1.0f, 1.0f), new Color(1.0f, 1.0f, 1.0f), 4)));
+        spheres.add(new Sphere(new Vector(0.2, 0.0, -0.1), 0.075, new Diffuse(new Color(1.0f, 0.0f, 0.0f), new Color(1.0f, 0.5f, 0.5f), 32)));
+        spheres.add(new Sphere(new Vector(-0.6, 0.0, 0.0), 0.3, new Diffuse(new Color(0.0f, 1.0f, 0.0f), new Color(0.5f, 1.0f, 0.5f), 32)));
+        triangles.add(new Triangle(new Vector(0.3, -0.3, -0.4), new Vector(0.0, 0.3, -0.1), new Vector(-0.3, -0.3, 0.2), new Diffuse(new Color(0.0f, 0.0f, 1.0f), new Color(1.0f, 1.0f, 1.0f), 32)));
+        triangles.add(new Triangle(new Vector(-0.2, 0.1, 0.1), new Vector(-0.2, -0.5, 0.2), new Vector(-0.2, 0.1, -0.3), new Diffuse(new Color(1.0f, 1.0f, 0.0f), new Color(1.0f, 1.0f, 1.0f), 4)));
+        cameraSettings = new CameraSettings(new Vector(0.0, 0.0, 0.0), new Vector(0.0, 0.0, 1.0), new Vector(0.0, 1.0, 0.0), 28);
+        light = new Light(new Vector(1.0, 0.0, 0.0), new Color(1.0f, 1.0f, 1.0f), new Color(0.1f, 0.1f, 0.1f), new Color(0.2f, 0.2f, 0.2f));
+        scene = new Scene(spheres, triangles, cameraSettings, light);
+        scene.rayTraceToFile(args[0]);
 
         spheres = new ArrayList<>();
         triangles = new ArrayList<>();
@@ -49,16 +49,17 @@ public class Main
         scene = new Scene(spheres, triangles, cameraSettings, light);
         scene.rayTraceToFile(args[1]);
 
-//        spheres = new ArrayList<>();
-//        triangles = new ArrayList<>();
+        spheres = new ArrayList<>();
+        triangles = new ArrayList<>();
 //        spheres.add(new Sphere(new Vector(0.0, 0.0, 0.0), 0.2322, new Refractive(new Color(1.0f, 1.0f, 1.0f), 1.333)));
-//        spheres.add(new Sphere(new Vector(0.25, 0.25, -0.6), 0.1161, new Diffuse(new Color(1.0f, 1.0f, 0.0f), new Color(0.5f, 1.0f, 0.5f), 4)));
-//        spheres.add(new Sphere(new Vector(-0.25, 0.25, -0.6), 0.1161, new Diffuse(new Color(1.0f, 0.0f, 0.0f), new Color(0.0f, 0.0f, 0.0f), 4)));
-//        spheres.add(new Sphere(new Vector(-0.25, -0.25, -0.6), 0.1161, new Diffuse(new Color(0.0f, 0.0f, 1.0f), new Color(0.0f, 0.0f, 0.0f), 4)));
-//        spheres.add(new Sphere(new Vector(0.25, -0.25, -0.6), 0.1161, new Diffuse(new Color(0.0f, 1.0f, 0.0f), new Color(0.0f, 0.0f, 0.0f), 4)));
-//        cameraSettings = new CameraSettings(new Vector(0.0, 0.0, 0.0), new Vector(0.0, 0.0, 1.2), new Vector(0.0, 1.0, 0.0), 35);
-//        light = new Light(new Vector(0.0, 0.0, 1.0), new Color(1.0f, 1.0f, 1.0f), new Color(0.0f, 0.0f, 0.0f), new Color(0.2f, 0.2f, 0.2f));
-//        scene = new Scene(spheres, triangles, cameraSettings, light);
-//        scene.rayTraceToFile(args[2]);
+        spheres.add(new Sphere(new Vector(0.0, 0.0, 0.0), 0.2322, new Reflective(new Color(1.0f, 1.0f, 1.0f))));
+        spheres.add(new Sphere(new Vector(0.25, 0.25, -0.6), 0.1161, new Diffuse(new Color(1.0f, 1.0f, 0.0f), new Color(0.5f, 1.0f, 0.5f), 4)));
+        spheres.add(new Sphere(new Vector(-0.25, 0.25, -0.6), 0.1161, new Diffuse(new Color(1.0f, 0.0f, 0.0f), new Color(0.0f, 0.0f, 0.0f), 4)));
+        spheres.add(new Sphere(new Vector(-0.25, -0.25, -0.6), 0.1161, new Diffuse(new Color(0.0f, 0.0f, 1.0f), new Color(0.0f, 0.0f, 0.0f), 4)));
+        spheres.add(new Sphere(new Vector(0.25, -0.25, -0.6), 0.1161, new Diffuse(new Color(0.0f, 1.0f, 0.0f), new Color(0.0f, 0.0f, 0.0f), 4)));
+        cameraSettings = new CameraSettings(new Vector(0.0, 0.0, 0.0), new Vector(0.0, 0.0, 1.2), new Vector(0.0, 1.0, 0.0), 35);
+        light = new Light(new Vector(0.0, 0.0, 1.0), new Color(1.0f, 1.0f, 1.0f), new Color(0.01f, 0.01f, 0.01f), new Color(0.2f, 0.2f, 0.2f));
+        scene = new Scene(spheres, triangles, cameraSettings, light);
+        scene.rayTraceToFile(args[2]);
     }
 }
