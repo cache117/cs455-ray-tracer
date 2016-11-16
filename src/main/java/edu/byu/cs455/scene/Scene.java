@@ -27,7 +27,7 @@ public class Scene
     private static final int IMAGE_HEIGHT = IMAGE_DIMENSION;
     private static final int IMAGE_WIDTH = IMAGE_DIMENSION;
 
-    public static final int MAXIMUM_TRACE_DEPTH = 2;
+    public static final int MAXIMUM_TRACE_DEPTH = 6;
 
     private final List<Sphere> spheres;
     private final List<Triangle> triangles;
