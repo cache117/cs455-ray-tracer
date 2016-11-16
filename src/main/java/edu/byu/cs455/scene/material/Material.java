@@ -69,7 +69,7 @@ public abstract class Material
         return getVectorColor(ambientTerm);
     }
 
-    protected Vector getReflectionVector(Vector normal, Vector directionToLight)
+    protected Vector getLightReflectionVector(Vector normal, Vector directionToLight)
     {
         return normal
                 .multiply(2)

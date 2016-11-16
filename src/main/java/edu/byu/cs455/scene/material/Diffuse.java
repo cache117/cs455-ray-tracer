@@ -41,7 +41,7 @@ public class Diffuse extends Material
         Vector specularHighlightColor = getColorVector(getSpecularHighlight()); //cp
 
         Vector directionToLight = scene.getDirectionToLight().normalize(); //l
-        Vector reflectionVector = getReflectionVector(normal, directionToLight); //r
+        Vector reflectionVector = getLightReflectionVector(normal, directionToLight); //r
 
         double visibilityTerm = isInShadow ? 0 : 1;
         Vector ambientTerm = diffuseReflectanceColor
