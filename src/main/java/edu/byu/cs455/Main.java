@@ -45,7 +45,7 @@ public class Main
         triangles.add(new Triangle(new Vector(0.0, -0.5, 0.5), new Vector(1.0, 0.5, 0.0), new Vector(0.0, -0.5, -0.5), new Diffuse(new Color(0.0f, 0.0f, 1.0f), new Color(1.0f, 1.0f, 1.0f), 4)));
         triangles.add(new Triangle(new Vector(0.0, -0.5, 0.5), new Vector(0.0, -0.5, -0.5), new Vector(-1, 0.5, 0.0), new Diffuse(new Color(1.0f, 1.0f, 0.0f), new Color(1.0f, 1.0f, 1.0f), 4)));
         cameraSettings = new CameraSettings(new Vector(0.0, 0.0, 0.0), new Vector(0.0, 0.0, 1.2), new Vector(0.0, 1.0, 0.0), 55);
-        light = new Light(new Vector(0.0, 1.0, 0.0), new Color(1.0f, 1.0f, 1.0f), new Color(0.0f, 0.0f, 0.0f), new Color(0.2f, 0.2f, 0.2f));
+        light = new Light(new Vector(0.0, 1.0, 0.0), new Color(1.0f, 1.0f, 1.0f), new Color(0.05f, 0.05f, 0.05f), new Color(0.2f, 0.2f, 0.2f));
         scene = new Scene(spheres, triangles, cameraSettings, light);
         scene.rayTraceToFile(args[1]);
 
